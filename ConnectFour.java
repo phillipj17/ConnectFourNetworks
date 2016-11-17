@@ -1,47 +1,47 @@
-//CS 445 Networks Progject
-//Authors: Jenna Phillips and Shilpa Nanja
-
+/**
+ * CS 445: Networks Project
+ * Authors: Jenna Phillips and Shilpa Nanja
+ *
+ * Date: November 16th, 2016
+ *
+ * Connect Four:
+ *      This is a command line based game that will have the ability
+ * to accomadate 2 players, taking turns. We will be using socketing to
+ * communicate between the two players on the same network ideally.
+ * Connect Four is a 6x7 game board, where you drop a piece in a column,
+ * hoping to reach 4 in a row before your opponent.
+ *
+ **/
 import java.util.Scanner;
 
 public class ConnectFour
 {
-  //We need to first create the basic visual pattern
-  public static String[][] createPattern()
+  //First we need to create the game board
+  public static String[][] createBoard()
   {
-    //Although the game is more like a table of 6
-    //columns and 6 rows, we're going to have to make
-    //a 2D array of 7 rows and 15 columns because graphically
-    //there's an extra row to show the ___ at the bottom
-    //and you have double the columns that show | | |
-    //between each number
+    //The is truly 7x6, however we need extra room for the drawing
+    //of the board outline
      String[][] f = new String[7][15];
 
-
-    //Time to loop over each row from up to down
+    //Time to loop over each row and column
      for (int i =0;i<f.length;i++)
      {
-
-       //Time to loop over each column from left to right
        for (int j =0;j<f[i].length;j++)
-      {
-        //Note how it is always the even column
-        //that has the border and the odd column
-        //between them that will be either empty or
-        //have a number
+       {
+        //Note: the even column has the border
+        //and the odd will hold either " " or a value
         if (j% 2 == 0) f[i][j] ="|";
         else f[i][j] = " ";
 
         //Time to make our lowest row
         if (i==6) f[i][j]= "-";
-      }
-
+       }
     }
     return f;
   }
 
-  //Yes, we even need to make a new method for visually
-  //printing our game, but at least it's not hard to do
-  public static void printPattern(String[][] f)
+  //Printing the board needs to be done seperately
+  public static void printBoard(String[][] f)
   {
     for (int i =0;i<f.length;i++)
     {
@@ -53,51 +53,39 @@ public class ConnectFour
     }
   }
 
-  //Here's are basic move, making the lowest empty row
-  //of a specific column have a Red
-  public static void dropRedPattern(String[][] f)
+  //The most basic move, making the lowest empty row have a Red
+  public static void dropBluePattern(String[][] f)
   {
-    //We need to have the user tell us what column he wants
-    //to drop a red into
-    //Note: the user isn't supposed to know that we have 15 columns
-    //starting at index 0 till 14 but just 6 nice ones
-    System.out.println("Drop a red disk at column (0–6): ");
+    //User will tell the column
+    System.out.println("Drop a blue token at column (0–6): ");
     Scanner scan = new Scanner (System.in);
 
-    //Thankfully, there's a simple formula for converting a 1-2-3-4-5-6
-    //user column number into a 1-3-5-7-9-11-13
+    //Converting a 1-2-3-4-5-6 into the user column number 1-3-5-7-9-11-13
     int c = 2*scan.nextInt()+1;
 
-    //Now that we know our column, we have to loop
-    //over each row from the bottom to the top
-    //till we find the first  empty space, drop, and
-    //then finish (i.e., break) the move
-    //Note: although as coders we're used to starting from
-    //0 to the end, here that wouldn't work so well because
-    //it would involve multiple if statements, but try it out
-    //on your own if you want to
+    //Cycle through the rows from the bottom up, and drop the token
+    //in the first open slot
+    for (int i =5;i>=0;i--)
+    {
+      if (f[i][c] == " ")
+      {
+        f[i][c] = "B";
+        break;
+      }
+    }
+  }
+//////////////////////////////////////////////////////////////
+  //Same as the above step, just yellow
+  public static void dropRedPattern(String[][] f)
+  {
+    System.out.println("Drop a red token at column (0–6): ");
+    Scanner scan = new Scanner (System.in);
+    int c = 2*scan.nextInt()+1;
     for (int i =5;i>=0;i--)
     {
       if (f[i][c] == " ")
       {
         f[i][c] = "R";
-        break;
-      }
-
-    }
-  }
-
-  //Same as the above step, just yellow
-  public static void dropYellowPattern(String[][] f)
-  {
-    System.out.println("Drop a yellow disk at column (0–6): ");
-    Scanner scan = new Scanner (System.in);
-    int c = 2*scan.nextInt()+1;
-    for (int i =5;i>=0;i--)
-    {
-      if (f[i][c] == " ")
-      {
-        f[i][c] = "Y";
         break;
       }
 
@@ -228,29 +216,29 @@ public class ConnectFour
   public static void main (String[] args)
   {
     //Time to make a pattern
-    String[][] f = createPattern();
+    String[][] f = createBoard();
     //Time to make a condition for our game to keep on
     //playing
     boolean loop = true;
     //We need something to keep track of whose turn it is
     int count = 0;
-    printPattern(f);
+    printBoard(f);
     while(loop)
     {
        //Let's say that Red gets the first turn and thus
        //every other turn
-       if (count % 2 == 0) dropRedPattern(f);
-       else dropYellowPattern(f);
+       if (count % 2 == 0) dropBluePattern(f);
+       else dropRedPattern(f);
        count++;//We need to keep track of the turns
-       printPattern(f);
+       printBoard(f);
        //Let's say we want to check for a winner during every
        //turn made and say who it is
        if (checkWinner(f) != null)
        {
-          if (checkWinner(f) == "R")
-             System.out.println("The red player won.");
-          else if (checkWinner(f)== "Y")
-            System.out.println("The yello player won.");
+          if (checkWinner(f) == "B")
+             System.out.println("The blue player won.");
+          else if (checkWinner(f)== "R")
+            System.out.println("The red player won.");
          //Well, if someone one, then the game has to end
          loop = false;
     }
