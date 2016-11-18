@@ -57,7 +57,7 @@ public class ConnectFour
   public static void dropBluePattern(String[][] f)
   {
     //User will tell the column
-    System.out.println("Drop a blue token at column (0–6): ");
+    System.out.println("Drop a blue token at column (0-6): ");
     Scanner scan = new Scanner (System.in);
 
     //Converting a 1-2-3-4-5-6 into the user column number 1-3-5-7-9-11-13
@@ -78,7 +78,7 @@ public class ConnectFour
   //Same as the above step, just yellow
   public static void dropRedPattern(String[][] f)
   {
-    System.out.println("Drop a red token at column (0–6): ");
+    System.out.println("Drop a red token at column (0-6): ");
     Scanner scan = new Scanner (System.in);
     int c = 2*scan.nextInt()+1;
     for (int i =5;i>=0;i--)
